@@ -1,0 +1,68 @@
+substitutions:
+  name: lolin-c3-pico
+  friendly_name: "LOLIN C3 Pico"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  project:
+    name: codex.board-triage
+    version: 0.3.0
+
+esp32:
+  board: lolin_c3_mini
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ap:
+    ssid: "${name} FB"
+
+captive_portal:
+
+dashboard_import:
+  package_import_url: github://kamilzierke/board_triage/boards/lolin_c3_pico.yaml@main
+  import_full_config: false
+
+light:
+  - platform: esp32_rmt_led_strip
+    id: onboard_rgb
+    name: "${friendly_name} RGB LED"
+    pin: GPIO7
+    num_leds: 1
+    rgb_order: RGB
+    chipset: WS2812
+
+binary_sensor:
+  - platform: gpio
+    id: boot_button
+    name: "${friendly_name} BOOT Button"
+    pin:
+      number: GPIO9
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+
+sensor:
+  - platform: adc
+    id: battery_voltage
+    name: "${friendly_name} Battery Voltage"
+    pin: GPIO3
+    attenuation: 12db
+    update_interval: 30s
+    disabled_by_default: true
+    filters:
+      - multiply: 2.0
+    entity_category: diagnostic
+    accuracy_decimals: 2
+    device_class: voltage
+    unit_of_measurement: V
