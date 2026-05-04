@@ -1,0 +1,59 @@
+substitutions:
+  name: seeed-xiao-esp32c3
+  friendly_name: "XIAO ESP32C3"
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  project:
+    name: codex.board-triage
+    version: 0.3.0
+
+esp32:
+  board: seeed_xiao_esp32c3
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ap:
+    ssid: "${name} FB"
+
+captive_portal:
+
+dashboard_import:
+  package_import_url: github://kamilzierke/board_triage/boards/seeed_xiao_esp32c3.yaml@main
+  import_full_config: false
+
+i2c:
+  sda: GPIO6
+  scl: GPIO7
+  scan: true
+
+binary_sensor:
+  - platform: gpio
+    id: boot_button
+    name: "${friendly_name} BOOT Button"
+    pin:
+      number: GPIO9
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+
+text_sensor:
+  - platform: template
+    id: charge_led_note
+    name: "${friendly_name} Charge LED Note"
+    entity_category: diagnostic
+    update_interval: never
+    lambda: |-
+      return std::string("Charge LED is hardware-managed and is not exposed as a controllable GPIO.");
+
