@@ -32,14 +32,15 @@ dashboard_import:
   package_import_url: github://kamilzierke/board_triage/boards/lolin_c3_pico.yaml@main
   import_full_config: false
 
-light:
-  - platform: esp32_rmt_led_strip
-    id: onboard_rgb
-    name: "${friendly_name} RGB LED"
-    pin: GPIO7
-    num_leds: 1
-    rgb_order: RGB
-    chipset: WS2812
+i2c:
+  sda: GPIO8
+  scl: GPIO10
+  scan: true
+
+spi:
+  clk_pin: GPIO1
+  mosi_pin: GPIO4
+  miso_pin: GPIO0
 
 binary_sensor:
   - platform: gpio
@@ -51,6 +52,15 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
+
+light:
+  - platform: esp32_rmt_led_strip
+    id: onboard_rgb
+    name: "${friendly_name} RGB LED"
+    pin: GPIO7
+    num_leds: 1
+    rgb_order: RGB
+    chipset: WS2812
 
 sensor:
   - platform: adc
@@ -66,3 +76,4 @@ sensor:
     accuracy_decimals: 2
     device_class: voltage
     unit_of_measurement: V
+
